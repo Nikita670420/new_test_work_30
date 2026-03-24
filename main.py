@@ -90,4 +90,3 @@ async def create_recipe(recipe_data: RecipeCreate, session: AsyncSession = Depen
     )
 
 
-print('Тут просто кусок кода, который позволит отличить то, что было при проверке и при демонстрации.')
