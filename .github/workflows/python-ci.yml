@@ -9,8 +9,15 @@ jobs:
       with:
         python-version: '3.11'
     - run: pip install fastapi httpx sqlalchemy pydantic pytest flake8 black isort aiosqlite
-    - run: flake8 . --max-line-length=200 --ignore=E501,E302
-    - run: black --check . --line-length=200
-    - run: isort . --check-only --line-length=200
-    - run: echo "Pytest запускается:"
-    - run: pytest tests.py -v || exit 0
+    - run: |
+        echo "Flake8:"
+        flake8 . --max-line-length=200 --ignore=E501,E302
+    - run: |
+        echo "Black:"
+        black --check . --line-length=200 --diff || exit 0
+    - run: |
+        echo "Isort:"
+        isort . --check-only --line-length=200 || exit 0
+    - run: |
+        echo "Pytest:"
+        pytest tests.py -v || exit 0
