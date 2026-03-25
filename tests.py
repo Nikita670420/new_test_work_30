@@ -18,11 +18,6 @@ def test_read_recipes(client):
 
 def test_create_recipe(client):
     """Тест POST /recipes - создание рецепта"""
-    response = client.post("/recipes", json={
-        "name": "Тестовый суп",
-        "cooking_time": 30,
-        "ingredients": ["вода", "картошка"],
-        "description": "Простой суп"
-    })
+    response = client.post("/recipes", json={"name": "Тестовый суп", "cooking_time": 30, "ingredients": ["вода", "картошка"], "description": "Простой суп"})
     assert response.status_code == 201
     assert response.json()["name"] == "Тестовый суп"
