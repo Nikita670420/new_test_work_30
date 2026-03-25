@@ -74,5 +74,4 @@ async def create_recipe(recipe_data: RecipeCreate, session: AsyncSession = Depen
     return RecipeDetail(id=recipe.id, name=recipe.name, cooking_time=recipe.cooking_time, ingredients=ingredients, description=recipe.description)
 
 
-
 print("Тут просто print, который позволит отличить то, что было при проверке и при демонстрации.")
