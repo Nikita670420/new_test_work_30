@@ -1,17 +1,18 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy import select, desc
-from sqlalchemy.ext.asyncio import AsyncSession
+import json
 from typing import List
 
-from database import get_session, create_tables
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy import desc, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from database import create_tables, get_session
 from models import Recipe
-from schemas import RecipeList, RecipeDetail, RecipeCreate
-import json
+from schemas import RecipeCreate, RecipeDetail, RecipeList
 
 app = FastAPI(
     title="Кулинарная книга API",
     description="Асинхронный сервис рецептов. GET /recipes — список с сортировкой по популярности (views_count DESC, cooking_time ASC). GET /recipes/{id} — детали. POST /recipes — создание.",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 
@@ -51,13 +52,7 @@ async def get_recipe_detail(recipe_id: int, session: AsyncSession = Depends(get_
     await session.refresh(recipe)
 
     ingredients = json.loads(recipe.ingredients) if recipe.ingredients else []
-    return RecipeDetail(
-        id=recipe.id,
-        name=recipe.name,
-        cooking_time=recipe.cooking_time,
-        ingredients=ingredients,
-        description=recipe.description
-    )
+    return RecipeDetail(id=recipe.id, name=recipe.name, cooking_time=recipe.cooking_time, ingredients=ingredients, description=recipe.description)
 
 
 @app.post("/recipes", response_model=RecipeDetail, status_code=201)
@@ -70,24 +65,13 @@ async def create_recipe(recipe_data: RecipeCreate, session: AsyncSession = Depen
     if len(recipe_data.ingredients) < 1:
         raise HTTPException(status_code=422, detail="ingredients: минимум 1 элемент")
 
-    recipe = Recipe(
-        name=recipe_data.name,
-        cooking_time=recipe_data.cooking_time,
-        description=recipe_data.description,
-        ingredients=json.dumps(recipe_data.ingredients)
-    )
+    recipe = Recipe(name=recipe_data.name, cooking_time=recipe_data.cooking_time, description=recipe_data.description, ingredients=json.dumps(recipe_data.ingredients))
     session.add(recipe)
     await session.commit()
     await session.refresh(recipe)
 
     ingredients = recipe_data.ingredients
-    return RecipeDetail(
-        id=recipe.id,
-        name=recipe.name,
-        cooking_time=recipe.cooking_time,
-        ingredients=ingredients,
-        description=recipe.description
-    )
+    return RecipeDetail(id=recipe.id, name=recipe.name, cooking_time=recipe.cooking_time, ingredients=ingredients, description=recipe.description)
 
 
-print('Тут просто print, который позволит отличить то, что было при проверке и при демонстрации.')
+print("Тут просто print, который позволит отличить то, что было при проверке и при демонстрации.")

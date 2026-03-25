@@ -1,7 +1,10 @@
-from sqlalchemy import String, Integer, Text
-from sqlalchemy.orm import Mapped, mapped_column
-from database import Base
 from typing import List
+
+from sqlalchemy import Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from database import Base
+
 
 class Recipe(Base):
     __tablename__ = "recipes"

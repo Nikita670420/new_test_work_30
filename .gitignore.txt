@@ -1,0 +1,10 @@
+# IDE
+.idea/
+.vscode/
+
+# Secrets
+key
+__pycache__/
+*.db
+.env
+*.pyc
